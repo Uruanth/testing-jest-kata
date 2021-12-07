@@ -50,7 +50,6 @@ export const createEvent = ( weekday, week, openHour, closeHour ) => {
         description: "Mentoring and Practice",
         start: date,
         date: new Date(date).toLocaleDateString('es-ES', options),
-        // date: Date.now(),
         duration: [closeHour - openHour, "hour"]
     };
 }
