@@ -64,6 +64,10 @@ test('Validation start date', () => {
 
     const starTest = getDateCalendar(numDayTest, currentDayTest);
     const result = createEvent(weekday, week, openHour, closeHour);
+    starTest.setSeconds(0);
+    starTest.setMilliseconds(0);
+    result.start.setSeconds(0);
+    result.start.setMilliseconds(0);
     expect(result.start).toStrictEqual(starTest);
 
 });
@@ -214,7 +218,11 @@ test('create an event list of at least 10 events', () => {
         
         const dayEvent = NUM_DAY[evento.weekday];
         const dateInit = getDateCalendarTest(dayEvent, currentDayTest);
+        dateInit.setSeconds(0);
+        dateInit.setMilliseconds(0);
         const result = createEvent(evento.weekday, evento.week, evento.openHour, evento.closeHour);
+        result.start.setSeconds(0);
+        result.start.setMilliseconds(0);
         const dateTest = new Date(dateInit).toLocaleDateString('es-ES', options);
         const title = "[SOFKA U] Meeting Room";
         const description = "Mentoring and Practice";
