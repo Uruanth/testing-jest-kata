@@ -3,10 +3,6 @@ import {
 
 } from './functions'
 
-beforeAll(() => {
-    global.Date.now = jest.fn(() => new Date('2020-04-07T10:20:30Z').getTime());
-});
-
 
 //Definir terminos iniciales
 const weekday = 'mon';
@@ -66,9 +62,9 @@ test('Validation a event title and content basic', () => {
 
 test('Validation start date', () => {
 
-    const startDate = getDateCalendar(numDayTest, currentDayTest);
+    const starTest = getDateCalendar(numDayTest, currentDayTest);
     const result = createEvent(weekday, week, openHour, closeHour);
-    expect(result.start).toEqual(startDate);
+    expect(result.start).toStrictEqual(starTest);
 
 });
 
@@ -201,16 +197,34 @@ test('create an event list of at least 10 events', () => {
 
     listTest.map(evento => {
 
+        //funciones que estan que cambian con valores locales
+        const hourTest = new Date().getHours();
+
+        function addDaysTest(days) {
+            return new Date(new Date().setDate(new Date().getDate() + days));
+        }
+        
+        function getDateCalendarTest(numDay, currentDay) {
+            if (numDay >= currentDay && parseInt(evento.closeHour) >= hourTest) { //posterior a dia de la semana
+                return addDaysTest((numDay - currentDay) + 7 * (evento.week - 1));
+            }
+            return addDaysTest((numDay - currentDay) + 7 * (evento.week - 1));
+        }
+
+        
         const dayEvent = NUM_DAY[evento.weekday];
-        const dateInit = getDateCalendar(dayEvent, currentDayTest);
+        const dateInit = getDateCalendarTest(dayEvent, currentDayTest);
         const result = createEvent(evento.weekday, evento.week, evento.openHour, evento.closeHour);
         const dateTest = new Date(dateInit).toLocaleDateString('es-ES', options);
         const title = "[SOFKA U] Meeting Room";
         const description = "Mentoring and Practice";
-
+        const durationTest = [(evento.closeHour - evento.openHour), 'hour']
+        
         expect(result.title).toBe(title);
         expect(result.description).toBe(description);
+        expect(result.start).toEqual(dateInit);
         expect(result.date).toEqual(dateTest);
+        expect(result.duration).toEqual(durationTest);
 
 
     })
